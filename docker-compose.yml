@@ -19,6 +19,7 @@ services:
       - mysql
     volumes:
       - ./project_name:/app
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
     environment:
     #172.17.0.1 is IP of docker0 interface and should be up and running on
     #any machine with docker installed, so...

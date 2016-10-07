@@ -34,11 +34,3 @@ services:
       MYSQL_USER: "${MYSQL_USER}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-
-  composer:
-    build:
-      context: ./docker/composer
-    volumes_from:
-      - fpm
-    environment:
-      GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}

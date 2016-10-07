@@ -8,7 +8,7 @@ services:
       - fpm
     volumes:
       - ./docker/nginx/vhost.conf:/etc/nginx/conf.d/default.conf
-      - ./project_name:/app
+      - ./${PROJECT_NAME}:/app
     ports:
       - '8080:80'
 
@@ -18,7 +18,7 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ./project_name:/app
+      - ./${PROJECT_NAME}:/app
       - ./docker/fpm/php.ini:/usr/local/etc/php/php.ini
     environment:
     #172.17.0.1 is IP of docker0 interface and should be up and running on
@@ -28,9 +28,24 @@ services:
   mysql:
     image: mysql:5.7
     volumes:
-      - ./project_name/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./${PROJECT_NAME}/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       MYSQL_DATABASE: "${MYSQL_DATABASE}"
       MYSQL_USER: "${MYSQL_USER}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+
+  composer:
+    build:
+      context: ./docker/composer
+    volumes:
+      - ./${PROJECT_NAME}:/app
+      - composer:/composer
+    environment:
+      GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
+    user: "1000:1000"
+
+volumes:
+  # global composer volume
+  composer:
+    driver: local
